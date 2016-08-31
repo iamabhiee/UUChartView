@@ -32,12 +32,12 @@
 
 -(void)setYLabels:(NSArray *)yLabels
 {
-    NSInteger max = 0;
-    NSInteger min = 1000000000;
+    CGFloat max = 0.0f;
+    CGFloat min = CGFLOAT_MAX;
 
     for (NSArray * ary in yLabels) {
         for (NSString *valueString in ary) {
-            NSInteger value = [valueString integerValue];
+            CGFloat value = [valueString floatValue];
             if (value > max) {
                 max = value;
             }
@@ -46,13 +46,18 @@
             }
         }
     }
-    max = max<5 ? 5:max;
+    
+    max = max;
     _yValueMin = 0;
-    _yValueMax = (int)max;
+    _yValueMax = max;
     
     if (_chooseRange.max != _chooseRange.min) {
         _yValueMax = _chooseRange.max;
         _yValueMin = _chooseRange.min;
+    }
+    
+    if (_yValueMax == 0) {
+        return;
     }
 
     float level = (_yValueMax-_yValueMin) /4.0;
@@ -61,7 +66,7 @@
 
     for (int i=0; i<5; i++) {
         UUChartLabel * label = [[UUChartLabel alloc] initWithFrame:CGRectMake(0.0,chartCavanHeight-i*levelHeight+5, UUYLabelwidth, UULabelHeight)];
-		label.text = [NSString stringWithFormat:@"%d",(int)(level * i+_yValueMin)];
+		label.text = [NSString stringWithFormat:@"%.4f",(level * i+_yValueMin)];
 		[self addSubview:label];
     }
     if ([super respondsToSelector:@selector(setMarkRange:)]) {
@@ -173,6 +178,10 @@
                 min = num;
                 min_i = j;
             }
+        }
+        
+        if (max == 0) {
+            return;
         }
         
         //划线
