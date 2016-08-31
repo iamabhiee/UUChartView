@@ -11,5 +11,6 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/iamabhiee/UUChartView.git", :tag => s.version.to_s }
   s.ios.deployment_target = '7.0'
   s.source_files  = "UUChart/*.{h,m}"
+  s.frameworks   = "CoreGraphics", "QuartzCore"
   s.requires_arc = true
 end
